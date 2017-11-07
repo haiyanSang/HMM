@@ -1,8 +1,11 @@
 import Util
+
+#
 def segSentences(line,sentenceTags):
     lines=[]
     startIndex=0
     endIndex=0
+
     for endIndex in range(len(line)):
         if sentenceTags.__contains__(line[endIndex]):
             endIndex+=2
@@ -15,6 +18,7 @@ def segSentences(line,sentenceTags):
                 ll=line[startIndex:endIndex+1]
                 lines.append(ll)
                 startIndex=endIndex+1
+    # if there's no sentence split tag, add the line.
     if endIndex>startIndex+1:
         ll=line[startIndex:]
         lines.append(ll)
@@ -26,6 +30,7 @@ def segSentences(line,sentenceTags):
 tagDic={}
 
 filePath= "data/ori_data.txt"
+filePath= "data/test"
 tagFilePath = "data/tags.txt"
 
 trainFilePath = "data/train.txt"
@@ -33,7 +38,6 @@ testFilePath = "data/test.txt"
 trainFile = open(trainFilePath,"w")
 testFile = open(testFilePath,"w")
 sentenceTags=['。','?','？','！','!']
-
 file=open(filePath)
 num=0
 while 1:
@@ -54,7 +58,7 @@ while 1:
                 tagDic[tag]=1
 
         num = num +1
-        if num % 5 == 0:
+        if num % 10 == 0:
             testFile.write(ll+"\n")
         else:
             trainFile.write(ll+"\n")
@@ -82,7 +86,6 @@ print(tagDic.keys())
 
 trainFile.close()
 testFile.close()
-
 
 resultFile=open(tagFilePath, "w")
 result=""

@@ -13,7 +13,6 @@ prob_trans = load_model("model/prob_trans")
 prob_emit = load_model("model/prob_emit")
 
 def viterbi(obs, states, start_p, trans_p, emit_p) :
-    offset = 0.8
     V = [{}] #tabular
     path = {}
     obs=obs.split(" ")
@@ -21,6 +20,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p) :
         if emit_p[y].get(obs[0]):
             V[0][y] = start_p[y] * (emit_p[y].get(obs[0]))
         else:
+            flag = True
             V[0][y] = start_p[y] * (emit_p[y].get(obs[0], 0.0000001))
         # V[0][y] = math.log(start_p[y]) + math.log(emit_p[y].get(obs[0],0.00000001))
         # print(y)
@@ -31,6 +31,8 @@ def viterbi(obs, states, start_p, trans_p, emit_p) :
         newpath = {}
         for y in states:
             try:
+                if not emit_p[y].get(obs[t]):
+                    flag =True
                 (prob, state) = max([(V[t-1][y0] * trans_p[y0].get(y,0.0000001) * emit_p[y].get(obs[t],0.000001) ,y0) for y0 in states])
                 # (prob, state) = min([-math.log(V[t - 1][y0] - math.log(trans_p[y0].get(y, 0.00000001)) -math.log(emit_p[y].get(obs[t], 0.00000001)), -math.log(y0)) for y0 in states if V[t - 1][y0] > 0])
             except:
@@ -54,20 +56,28 @@ def prediction(sentence):
 
 
 def validate():
+    unkFilePath = "data/unk_words.txt"
     testRecordFilePath="data/testRecord.txt"
     testRecordFile=open(testRecordFilePath,"w")
+    unkFile = open(unkFilePath, "w")
     testFilePath="data/test.txt"
     testFile=open(testFilePath)
     line_sum=0
     words_count=0
     right=0
+    # The unknown words
+    unk = 0
+    r = 0
+    word_set = set(prob_emit['n'].keys())
     while 1:
         line = testFile.readline()
         line_sum+=1
         if not line:
             break
-        if line_sum>100:
-            break
+        #if line_sum>1000:
+            #break
+        if line_sum % 100 == 0:
+            print(line_sum)
         line=line.strip()
 
         words,tags=Util.seprateWordsAndTags(line)
@@ -93,32 +103,40 @@ def validate():
 
             for i in range(len(predicteTags)-1):
                 words_count+=1
+                if words[i] not in word_set:
+                    print(words[i])
+                    unkFile.write(words[i] + ' predict tag:' + predicteTags[i] + 'tag:' + tags[i])
+                    unk += 1
+                    print(predicteTags[i], tags[i])
+                    if predicteTags[i][0] == tags[i][0]:
+                        r += 1
                 if predicteTags[i]==tags[i]:
                     right+=1
 
     correct_rate=right*1.0/words_count
-
+    unk_rate = r * 1.0/ unk
     print("测试语料:%d行，总词数:%d,正确标注总数:%d,正确率:%.4f"%(line_sum,words_count,right,correct_rate))
+    print("未登录词总数：%d, 正确标注数：%d, 准确率:%.4f"%(unk, r, unk_rate))
 
-'''def test():
-    test_str = u"长春 市长 春节 讲话。"
+def atest():
+    test_str = u"长春 市长 春节 讲话 。"
     prob, pos_list = prediction(test_str)
     print(test_str)
     print(pos_list)
-    test_str = u"他 说 的 确实 在理."
-    prob, pos_list = prediction(test_str)
-    print(test_str)
-    print(pos_list)
-
-    test_str = u"毛主席 万岁。"
+    test_str = u"他 说 的 确实 在理 ."
     prob, pos_list = prediction(test_str)
     print(test_str)
     print(pos_list)
 
-    test_str = u"我 有 一台 电脑。"
+    test_str = u"王者荣耀 真 好玩"
     prob, pos_list = prediction(test_str)
     print(test_str)
-    print(pos_list)'''
+    print(pos_list)
+
+    test_str = u"大势 男团 EXO 成员 们 不顾 寒冬 跳入 海水 一 决 胜负 。"
+    prob, pos_list = prediction(test_str)
+    print(test_str)
+    print(pos_list)
 
 
 if __name__ == "__main__":

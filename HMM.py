@@ -56,8 +56,6 @@ def prediction(sentence):
 def validate():
     testRecordFilePath="data/testRecord.txt"
     testRecordFile=open(testRecordFilePath,"w")
-    print(1)
-
     testFilePath="data/test.txt"
     testFile=open(testFilePath)
     line_sum=0

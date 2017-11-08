@@ -8,3 +8,5 @@ b = set()
 b.add('a')
 b.add('s')
 print(a|b)
+for i in range(1,10):
+    print(i)

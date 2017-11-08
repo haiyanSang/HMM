@@ -21,7 +21,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p) :
         if emit_p[y].get(obs[0]):
             V[0][y] = start_p[y] * (emit_p[y].get(obs[0]))
         else:
-            V[0][y] = start_p[y] * (emit_p[y].get(obs[0], 0.000001))
+            V[0][y] = start_p[y] * (emit_p[y].get(obs[0], 0.0000001))
         # V[0][y] = math.log(start_p[y]) + math.log(emit_p[y].get(obs[0],0.00000001))
         # print(y)
         # print(V[0][y])
@@ -31,7 +31,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p) :
         newpath = {}
         for y in states:
             try:
-                (prob,state ) = max([(V[t-1][y0] * trans_p[y0].get(y,0.000001) * emit_p[y].get(obs[t],0.000001) ,y0) for y0 in states])
+                (prob, state) = max([(V[t-1][y0] * trans_p[y0].get(y,0.0000001) * emit_p[y].get(obs[t],0.000001) ,y0) for y0 in states])
                 # (prob, state) = min([-math.log(V[t - 1][y0] - math.log(trans_p[y0].get(y, 0.00000001)) -math.log(emit_p[y].get(obs[t], 0.00000001)), -math.log(y0)) for y0 in states if V[t - 1][y0] > 0])
             except:
                 print("XXXXXXXXXXXXXXXXXXXXXXX:",V)
@@ -41,7 +41,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p) :
             V[t][y] =prob
             newpath[y] = path[state] + [y]
         path = newpath
-    (prob, state) = min([(V[len(obs) - 1][y], y) for y in states])
+    (prob, state) = max([(V[len(obs) - 1][y], y) for y in states])
     return (prob, path[state])
 
 def prediction(sentence):
@@ -101,6 +101,7 @@ def validate():
     correct_rate=right*1.0/words_count
 
     print("测试语料:%d行，总词数:%d,正确标注总数:%d,正确率:%.4f"%(line_sum,words_count,right,correct_rate))
+
 '''def test():
     test_str = u"长春 市长 春节 讲话。"
     prob, pos_list = prediction(test_str)

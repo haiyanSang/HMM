@@ -67,7 +67,6 @@ def SaveModel():
                 A_dic[key][key1] = 0
             # A_dic[key][key1] = A_dic[key][key1] / Count_dic[key]
     pickle.dump(A_dic,trans_fp)
-    print(B_dic)
     for key in B_dic:
         print(key)
         for word in word_set:

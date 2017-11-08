@@ -30,7 +30,6 @@ def segSentences(line,sentenceTags):
 tagDic={}
 
 filePath= "data/ori_data.txt"
-filePath= "data/test"
 tagFilePath = "data/tags.txt"
 
 trainFilePath = "data/train.txt"

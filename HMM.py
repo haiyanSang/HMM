@@ -17,7 +17,7 @@ prob_trans = load_model("model/prob_trans")
 prob_emit = load_model("model/prob_emit")
 # prob_tags = load_model("model/prob_tags")
 
-def viterbi(obs, states, start_p, trans_p, emit_p, tags_p) :
+def viterbi(obs, states, start_p, trans_p, emit_p) :
     V = [{}] #tabular
     path = {}
     obs=obs.split(" ")
@@ -75,7 +75,7 @@ def prediction(sentence):
                                             ,'nrj','nmchm','nit','agf','gbmc','udeng','nzf','nitit','vx','ryv','qhm','nhm','l')
     try:
         prob, pos_list =  viterbi(sentence,tag_set,
-                                  prob_start, prob_trans, prob_emit, prob_tags)
+                                  prob_start, prob_trans, prob_emit)
     except:
         raise Exception("get an error when prediction.")
     return (prob,pos_list)
@@ -111,7 +111,7 @@ def validate():
         words,tags=Util.seprateWordsAndTags(line)
         inputstr=" ".join(words)
         try:
-            prob,predicteTags=prediction(inputstr)
+            prob, predicteTags = prediction(inputstr)
         except:
             print("ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,ERROR,")
             # print("PredicTags:", predicteTags)

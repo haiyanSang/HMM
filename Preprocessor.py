@@ -1,6 +1,7 @@
 import Util
 import re
 
+
 class preprocessor():
     def __init__(self, fp, tag_fp, train_fp, test_fp):
         self.tagDic = {}
@@ -64,6 +65,7 @@ class preprocessor():
                 if num % n == i:
                     testFile.write(ll+"\n")
                 else:
+                    #testFile.write(ll + "\n")
                     trainFile.write(ll+"\n")
         file.close()
         print(self.tagDic.keys())

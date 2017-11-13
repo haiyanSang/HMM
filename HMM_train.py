@@ -154,5 +154,5 @@ def main():
 
 if __name__ == "__main__":
     p = preprocessor("data/ori_data.txt", "data/tags.txt", "data/train.txt", "data/test.txt")
-    p.generateData(10, 2)
+    p.generateData(10, 5)
     main()

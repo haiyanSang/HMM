@@ -107,11 +107,11 @@ def SaveModel():
     trans_fp.close()
 
 
-def main():
-    if len(sys.argv) != 2:
-        print ("Usage [%s] [input_data] " % (sys.argv[0]))
-        sys.exit(0)
-    inputFile = open(sys.argv[1])
+def main_1(trainFilePath):
+    # if len(sys.argv) != 2:
+    #     print ("Usage [%s] [input_data] " % (sys.argv[0]))
+    #     sys.exit(0)
+    inputFile = open(trainFilePath)
     init()
     global word_set
     global line_num # initialized as 0
@@ -155,4 +155,4 @@ def main():
 if __name__ == "__main__":
     p = preprocessor("data/ori_data.txt", "data/tags.txt", "data/train.txt", "data/test.txt")
     p.generateData(10, 5)
-    main()
+    main_1("data/train.txt")
